@@ -41,10 +41,16 @@ command :'profiles:download' do |c|
 
   c.action do |args, options|
     type = (options.type.downcase.to_sym if options.type) || :development
-    profiles = try{agent.list_profiles(type)}
-    profiles = profiles.select{|profile| profile.status == 'Active'}
 
-    say_warning "No active #{type} profiles found." and abort if profiles.empty?
+    profiles = []
+    while profiles.empty?
+      profiles = try{agent.list_profiles(type)}  
+      profiles = profiles.select{|profile| profile.status == 'Active'}
+      if profiles.empty?
+         say_warning "No active #{type} profiles found. Waiting"
+         sleep 1
+      end
+    end
 
     profile = profiles.find{|p| p.name == args.join(" ")} || choose("Select a profile:", *profiles)
 
