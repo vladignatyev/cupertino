@@ -29,23 +29,26 @@ end
 alias_command :devices, :'devices:list'
 
 command :'devices:add' do |c|
-  c.syntax = 'ios devices:add DEVICE_NAME=DEVICE_ID [...]'
+  c.syntax = 'ios devices:add USER PASS UDID NAME [...]'
   c.summary = 'Adds the a device to the Provisioning Portal'
   c.description = ''
 
   c.action do |args, options|
-    say_error "Missing arguments, expected DEVICE_NAME=DEVICE_ID" and abort if args.nil? or args.empty?
+    say_error "Missing arguments, expected USER PASS UDID NAME" and abort if args.nil? or args.empty?
 
     devices = []
     args.each do |arg|
-      components = arg.strip.gsub(/"/, '').split(/\=/)
+      components = arg.strip.gsub(/"/, '').split(/\ /)
       device = Device.new
-      device.name = components.first
-      device.udid = components.last
+      user = components.first
+      pass = components[1]
+      device.udid = components[2]
+      device.name = components.last
       say_warning "Invalid UDID: #{device.udid}" and next unless /\h{40}/ === device.udid
       devices << device
     end
 
+    agent.set_account(user,pass)
     agent.add_devices(*devices)
 
     say_ok "Added #{pluralize(devices.length, 'device')}"

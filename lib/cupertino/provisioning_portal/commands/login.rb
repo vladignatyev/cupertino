@@ -4,13 +4,13 @@ command :login do |c|
   c.description = ''
 
   c.action do |args, options|
-    say_warning "You are already authenticated" if Security::InternetPassword.find(:server => Cupertino::ProvisioningPortal::HOST)
+    #say_warning "You are already authenticated" if Security::InternetPassword.find(:server => Cupertino::ProvisioningPortal::HOST)
 
-    user = ask "Username:"
-    pass = password "Password:"
+    #user = ask "Username:"
+    #pass = password "Password:"
 
-    Security::InternetPassword.add(Cupertino::ProvisioningPortal::HOST, user, pass)
+    #Security::InternetPassword.add(Cupertino::ProvisioningPortal::HOST, user, pass)
 
-    say_ok "Account credentials saved"
+    #say_ok "Account credentials saved"
   end
 end

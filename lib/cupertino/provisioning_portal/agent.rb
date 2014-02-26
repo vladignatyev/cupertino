@@ -25,8 +25,13 @@ module Cupertino
           set_proxy(uri.host, uri.port, user || uri.user, password || uri.password)
         end
 
-        pw = Security::InternetPassword.find(:server => Cupertino::ProvisioningPortal::HOST)
-        @username, @password = pw.attributes['acct'], pw.password if pw
+        #pw = Security::InternetPassword.find(:server => Cupertino::ProvisioningPortal::HOST)
+        #@username, @password = pw.attributes['acct'], pw.password if pw
+      end
+
+      def set_account(user,pass)
+        @username = user
+        @password = pass
       end
 
       def get(uri, parameters = [], referer = nil, headers = {})
